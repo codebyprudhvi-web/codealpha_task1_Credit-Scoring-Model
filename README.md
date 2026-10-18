@@ -336,7 +336,7 @@ CodeAlpha_Credit_Scoring_Model/
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/codebyprudhvi-web/codealpha_tasks.git
+git clone <(https://github.com/codebyprudhvi-web/codealpha_task3_Handwritten-Character-Recognition)>
 ```
 
 Open the downloaded repository in VS Code.
