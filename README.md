@@ -1,297 +1,277 @@
 # CodeAlpha Credit Scoring Model
 
-A machine learning project developed as part of the **CodeAlpha Machine Learning Internship – Task 1**.
+A machine learning project that predicts the risk of serious credit delinquency using historical financial and credit-related data.
 
-The goal of this project is to predict whether a person is likely to experience **serious delinquency within the next two years** based on historical financial information.
-
----
+This project was developed as part of the **CodeAlpha Machine Learning Internship**.
 
 ## 1. Project Overview
 
-Credit risk assessment is an important problem in the financial sector. Traditional credit assessment can involve many financial factors such as payment history, debt ratio, income, and credit utilization.
+Banks and financial institutions need to understand the potential risks associated with lending money. This project uses machine learning classification algorithms to estimate whether an individual may experience serious credit delinquency.
 
-In this project, machine learning classification algorithms are used to learn patterns from historical credit data and predict the risk of serious delinquency.
+The model learns patterns from historical credit data and predicts a risk probability based on an applicant's financial information and credit history.
 
-The project includes:
+**Project objective:** Build and evaluate a credit-risk classification model using machine learning.
 
-* Data inspection and cleaning
-* Exploratory Data Analysis (EDA)
-* Missing-value handling
-* Train-test splitting
-* Multiple classification models
-* Model comparison
-* Random Forest hyperparameter tuning
-* Decision-threshold optimization
-* Final model evaluation
-* Feature importance analysis
-* A command-line prediction system
+> Note: This project is an educational prototype. Its predictions should not be used as the sole basis for real financial or lending decisions.
 
----
+## 2. Dataset
 
-## 2. CodeAlpha Task
+This project uses the Give Me Some Credit dataset.
 
-**Task:** Credit Scoring Model
-
-The CodeAlpha task requires building a machine learning model that predicts creditworthiness using historical financial data.
-
-The project uses classification techniques and evaluates the models using metrics such as:
-
-* Precision
-* Recall
-* F1-Score
-* ROC-AUC
-
----
-
-## 3. Dataset
-
-The project uses the **Give Me Some Credit** dataset.
-
-The dataset contains 150,000 records and 12 columns, including the target variable and an ID column.
+* Total records: 150,000
+* Original columns: 12
+* Input features used: 10
+* Target column: `SeriousDlqin2yrs`
 
 ### Target Variable
 
-`SeriousDlqin2yrs`
+| Value | Meaning                                                     |
+| ----- | ----------------------------------------------------------- |
+| 0     | No recorded serious delinquency within the specified period |
+| 1     | Serious delinquency within the specified period             |
 
-* `0` → No serious delinquency
-* `1` → Serious delinquency
+### Class Distribution
 
-The dataset is imbalanced:
+| Class                  | Number of Records | Percentage |
+| ---------------------- | ----------------: | ---------: |
+| No serious delinquency |           139,974 |     93.32% |
+| Serious delinquency    |            10,026 |      6.68% |
 
-* No serious delinquency: **93.32%**
-* Serious delinquency: **6.68%**
+The dataset is imbalanced because the majority of records belong to class 0. Therefore, multiple evaluation metrics are used instead of relying only on accuracy.
 
-Because of this class imbalance, accuracy alone was not used to judge the model.
+## 3. Features Used
 
----
+The model uses the following 10 input features:
 
-## 4. Features
+| Feature                                | Description                                        |
+| -------------------------------------- | -------------------------------------------------- |
+| `RevolvingUtilizationOfUnsecuredLines` | Utilization of unsecured revolving credit          |
+| `age`                                  | Age of the individual                              |
+| `NumberOfTime30-59DaysPastDueNotWorse` | Number of times payments were 30–59 days past due  |
+| `DebtRatio`                            | Reported debt ratio                                |
+| `MonthlyIncome`                        | Monthly income                                     |
+| `NumberOfOpenCreditLinesAndLoans`      | Number of open credit lines and loans              |
+| `NumberOfTimes90DaysLate`              | Number of times payments were 90 or more days late |
+| `NumberRealEstateLoansOrLines`         | Number of real estate loans or credit lines        |
+| `NumberOfTime60-89DaysPastDueNotWorse` | Number of times payments were 60–89 days past due  |
+| `NumberOfDependents`                   | Number of dependents                               |
 
-The model uses the following financial and demographic features:
+The original `Unnamed: 0` index column is removed during preprocessing.
 
-| Feature                                | Description                                               |
-| -------------------------------------- | --------------------------------------------------------- |
-| `RevolvingUtilizationOfUnsecuredLines` | Credit utilization relative to available unsecured credit |
-| `age`                                  | Age of the applicant                                      |
-| `NumberOfTime30-59DaysPastDueNotWorse` | Number of times payments were 30–59 days late             |
-| `DebtRatio`                            | Debt-to-income related ratio                              |
-| `MonthlyIncome`                        | Monthly income                                            |
-| `NumberOfOpenCreditLinesAndLoans`      | Number of open credit lines and loans                     |
-| `NumberOfTimes90DaysLate`              | Number of times payments were 90+ days late               |
-| `NumberRealEstateLoansOrLines`         | Number of real estate loans or lines                      |
-| `NumberOfTime60-89DaysPastDueNotWorse` | Number of times payments were 60–89 days late             |
-| `NumberOfDependents`                   | Number of dependents                                      |
+## 4. Technologies Used
 
-The dataset ID column `Unnamed: 0` was removed because it does not provide useful predictive information.
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* Seaborn
+* Joblib
+* Git and GitHub
+* Visual Studio Code
 
----
+## 5. Project Workflow
 
-## 5. Data Preprocessing
+The project follows these steps:
+
+1. Inspect and understand the dataset.
+2. Perform exploratory data analysis (EDA).
+3. Handle missing values and prepare the features.
+4. Split the data into training and testing sets.
+5. Train and compare classification models.
+6. Tune the Random Forest model.
+7. Optimize the classification decision threshold.
+8. Evaluate the final model.
+9. Analyze feature importance.
+10. Save the trained model.
+11. Predict credit delinquency risk for new input data.
+
+## 6. Data Preprocessing
 
 The following preprocessing steps were performed:
 
-1. Removed the unnecessary ID column.
-2. Separated the target variable from the input features.
-3. Split the data into training and testing sets using an 80/20 stratified split.
-4. Used median imputation for missing values.
-5. Used scaling for Logistic Regression.
-6. Used class weighting for the classification models to handle class imbalance.
+* Removed the unnecessary index column.
+* Separated input features and the target variable.
+* Split the dataset into training and testing sets.
+* Used stratified sampling to preserve the target-class proportions.
+* Handled missing numerical values using median imputation.
+* Used class weighting to help address the imbalanced target distribution.
 
-The training set contains **120,000 records** and the test set contains **30,000 records**.
+### Training and Testing Split
 
----
+| Dataset      | Records | Percentage |
+| ------------ | ------: | ---------: |
+| Training set | 120,000 |        80% |
+| Testing set  |  30,000 |        20% |
+| Total        | 150,000 |       100% |
 
-## 6. Exploratory Data Analysis
+The split uses a fixed random state to make the results reproducible.
 
-EDA was performed to understand the dataset before training the models.
+The preprocessing pipeline learns imputation values from the training data and applies them to the test data.
 
-Important observations included:
+## 7. Exploratory Data Analysis
 
-* The target variable is highly imbalanced.
-* Monthly income contains a significant number of missing values.
-* Number of dependents also contains missing values.
-* Credit utilization and debt ratio contain highly skewed and extreme values.
-* Previous delinquency-related features show noticeable differences between the two target classes.
-* The delinquency-related variables are among the most informative features for prediction.
+Exploratory Data Analysis was performed to understand the dataset and identify patterns.
 
-EDA visualizations are stored in the `outputs` directory.
+The analysis includes:
 
----
+* Target-class distribution.
+* Feature distributions.
+* Correlation between numerical features.
+* Boxplots for selected numerical variables.
+* Comparisons between records with different target labels.
 
-## 7. Models Used
+The analysis showed that the dataset contains highly skewed values and a significant imbalance between the two target classes.
 
-Three classification algorithms were evaluated:
+EDA visualizations are available in the `outputs/` directory.
+
+## 8. Machine Learning Models
+
+Three classification models were trained and compared.
 
 ### Logistic Regression
 
-Used as a baseline linear classification model.
+Used as a baseline classification model to estimate the probability of serious delinquency.
 
 ### Decision Tree
 
-Used to capture nonlinear relationships between financial features and credit risk.
+Uses feature-based decision rules to classify records.
 
 ### Random Forest
 
-Used as the main tree-based ensemble model because it can capture more complex patterns and generally performs well on structured tabular data.
+Combines multiple decision trees to capture relationships between features and produce predictions.
 
----
+The models were evaluated using Accuracy, Precision, Recall, F1-score, and ROC-AUC.
 
-## 8. Baseline Model Comparison
+## 9. Baseline Model Comparison
 
-The initial models produced the following results:
+The following results were obtained during baseline evaluation:
 
-| Model               |   Accuracy |  Precision | Recall |   F1-Score |    ROC-AUC |
-| ------------------- | ---------: | ---------: | -----: | ---------: | ---------: |
-| Logistic Regression |     77.62% |     18.16% | 66.98% |     28.58% |     80.21% |
-| Decision Tree       |     78.44% |     20.51% | 77.41% |     32.42% |     84.95% |
-| Random Forest       | **82.56%** | **23.57%** | 71.72% | **35.48%** | **86.26%** |
+| Model               | Accuracy | Precision | Recall | F1-score | ROC-AUC |
+| ------------------- | -------: | --------: | -----: | -------: | ------: |
+| Logistic Regression |   77.62% |    18.16% | 66.98% |   28.58% |  80.21% |
+| Decision Tree       |   78.44% |    20.51% | 77.41% |   32.42% |  84.95% |
+| Random Forest       |   82.56% |    23.57% | 71.72% |   35.48% |  86.26% |
 
-The baseline Random Forest performed best overall, especially in terms of ROC-AUC and F1-Score.
+The baseline Random Forest achieved the highest F1-score and ROC-AUC among the three models, so it was selected for further experimentation.
 
----
+## 10. Random Forest Hyperparameter Tuning
 
-## 9. Random Forest Tuning
+Random Forest hyperparameters were tuned using `RandomizedSearchCV` with three-fold cross-validation.
 
-RandomizedSearchCV was used to improve the Random Forest model.
+The search evaluated 10 candidate configurations using ROC-AUC as the scoring metric.
 
-The final selected parameters were:
+The selected parameters were:
 
-```text
-n_estimators = 150
-max_depth = 8
-min_samples_split = 5
-min_samples_leaf = 1
-max_features = log2
-class_weight = balanced
-```
+* Number of trees: 150
+* Maximum tree depth: 8
+* Minimum samples required for a split: 5
+* Minimum samples required at a leaf: 1
+* Maximum features considered at each split: `log2`
+* Class weight: `balanced`
 
-The tuned model achieved:
+The best cross-validation ROC-AUC was approximately **86.01%**.
 
-```text
-ROC-AUC = 86.55%
-```
+### Tuned Model Results at Threshold 0.50
 
-The tuning improved the model's ability to identify risky cases and slightly improved ROC-AUC.
+| Metric    |  Score |
+| --------- | -----: |
+| Accuracy  | 79.18% |
+| Precision | 21.23% |
+| Recall    | 78.00% |
+| F1-score  | 33.37% |
+| ROC-AUC   | 86.55% |
 
----
+Tuning improved ROC-AUC and recall compared with the baseline Random Forest, but some other metrics decreased.
 
-## 10. Decision Threshold Optimization
+## 11. Decision Threshold Optimization
 
-The default classification threshold of 0.50 was not used as the final threshold.
+The tuned Random Forest produces a probability estimate. A decision threshold determines how that probability is converted into a class prediction.
 
-Different thresholds were evaluated to find a better balance between precision and recall.
+Different thresholds were tested, and the threshold of **0.75** produced the highest F1-score among the tested values.
 
-The threshold **0.75** produced the highest F1-Score among the tested thresholds.
+### Final Model Results at Threshold 0.75
 
-Final threshold:
+| Metric    |  Score |
+| --------- | -----: |
+| Accuracy  | 91.40% |
+| Precision | 38.78% |
+| Recall    | 49.58% |
+| F1-score  | 43.52% |
+| ROC-AUC   | 86.55% |
 
-```text
-0.75
-```
+The threshold of 0.75 improved precision and F1-score compared with using a threshold of 0.50.
 
-This means the model predicts serious delinquency when the predicted probability reaches at least 75%.
+However, recall decreased. The selected threshold is therefore a trade-off, not necessarily the best choice for every lending scenario.
 
----
+The final threshold was selected based on the F1-score among the tested thresholds.
 
-## 11. Final Model Results
+## 12. Final Model Evaluation
 
-The final Random Forest model was evaluated on the held-out test set.
+The final model was evaluated on the held-out test set of 30,000 records.
 
-| Metric    |     Result |
-| --------- | ---------: |
-| Accuracy  | **91.40%** |
-| Precision | **38.78%** |
-| Recall    | **49.58%** |
-| F1-Score  | **43.52%** |
-| ROC-AUC   | **86.55%** |
+### Confusion Matrix
 
-### Classification Report
+|                             | Predicted: No Delinquency | Predicted: Serious Delinquency |
+| --------------------------- | ------------------------: | -----------------------------: |
+| Actual: No Delinquency      |                    26,426 |                          1,569 |
+| Actual: Serious Delinquency |                     1,011 |                            994 |
 
-```text
-                        precision    recall  f1-score   support
+The model correctly identified 994 serious-delinquency cases and missed 1,011 cases.
 
-No Serious Delinquency       0.96      0.94      0.95     27995
-Serious Delinquency          0.39      0.50      0.44      2005
+It also incorrectly classified 1,569 records as serious delinquency.
 
-accuracy                                0.91     30000
-macro avg                   0.68      0.72      0.69     30000
-weighted avg                0.92      0.91      0.92     30000
-```
+This illustrates why precision, recall, and the confusion matrix are important when evaluating an imbalanced classification problem.
 
----
+The final confusion matrix is saved as:
 
-## 12. Confusion Matrix
-
-The final confusion matrix was:
-
-```text
-[[26426  1569]
- [ 1011   994]]
-```
-
-This represents:
-
-* 26,426 correctly predicted non-delinquent cases
-* 1,569 false positive predictions
-* 1,011 missed delinquent cases
-* 994 correctly detected delinquent cases
-
-The confusion matrix visualization is available in:
-
-```text
-outputs/final_confusion_matrix.png
-```
-
----
+`outputs/final_confusion_matrix.png`
 
 ## 13. Feature Importance
 
-The Random Forest model identified the following features as the most important:
+The Random Forest feature-importance analysis identified the following important features:
 
-| Feature                              | Importance |
-| ------------------------------------ | ---------: |
-| RevolvingUtilizationOfUnsecuredLines |     38.63% |
-| NumberOfTimes90DaysLate              |     20.64% |
-| NumberOfTime30-59DaysPastDueNotWorse |     19.66% |
-| NumberOfTime60-89DaysPastDueNotWorse |      9.99% |
-| age                                  |      4.30% |
-| DebtRatio                            |      1.96% |
-| NumberOfOpenCreditLinesAndLoans      |      1.73% |
-| NumberRealEstateLoansOrLines         |      1.51% |
-| MonthlyIncome                        |      1.36% |
-| NumberOfDependents                   |      0.23% |
+| Feature                                  | Importance |
+| ---------------------------------------- | ---------: |
+| Revolving Utilization of Unsecured Lines |     0.3863 |
+| Number of Times 90 Days Late             |     0.2064 |
+| Number of Times 30–59 Days Past Due      |     0.1966 |
+| Number of Times 60–89 Days Past Due      |     0.0999 |
+| Age                                      |     0.0430 |
 
-The results indicate that previous payment behavior and credit utilization are particularly important for predicting serious delinquency in this dataset.
+Revolving credit utilization had the highest feature importance in this model.
 
----
+Feature importance describes how features contribute to the Random Forest's decisions. It does not establish causation or guarantee that the model is fair.
+
+The feature-importance chart and CSV file are available in the `outputs/` directory.
 
 ## 14. Prediction System
 
-A command-line prediction system was created using the trained model.
+The project includes a command-line prediction program.
 
-Run:
+The program:
 
-```powershell
-python src\predict.py
-```
+1. Loads the saved model.
+2. Reads the saved decision threshold.
+3. Collects the applicant's financial information.
+4. Estimates the probability of serious delinquency.
+5. Compares the probability with the decision threshold.
+6. Displays the predicted class.
 
-The system asks for applicant information such as:
+### Saved Model Files
 
-* Age
-* Credit utilization
-* Payment delays
-* Debt ratio
-* Monthly income
-* Open credit lines
-* Number of 90-day late payments
-* Real estate loans
-* Number of dependents
+* `models/credit_scoring_model.pkl`
+* `models/decision_threshold.txt`
 
-The trained model then calculates a risk probability and provides a prediction.
+The saved pipeline includes median imputation and the tuned Random Forest classifier.
 
-Example:
+### Example Prediction
+
+An earlier test produced the following result:
 
 ```text
+CREDIT RISK PREDICTION
+
 Risk Probability : 40.10%
 Decision Threshold: 0.75
 
@@ -299,19 +279,11 @@ Prediction:
 NO SERIOUS DELINQUENCY RISK
 ```
 
-The trained model is stored in:
+Since the estimated probability was below the threshold of 0.75, the model predicted class 0.
 
-```text
-models/credit_scoring_model.pkl
-```
+The exact prediction may vary if the model or input values change.
 
-The decision threshold is stored in:
-
-```text
-models/decision_threshold.txt
-```
-
----
+This prediction is not a guarantee of future financial behaviour.
 
 ## 15. Project Structure
 
@@ -329,6 +301,10 @@ CodeAlpha_Credit_Scoring_Model/
 ├── notebooks/
 │
 ├── outputs/
+│   ├── baseline_model_results.csv
+│   ├── target_distribution.png
+│   ├── feature_distributions.png
+│   ├── correlation_matrix.png
 │   ├── final_confusion_matrix.png
 │   ├── feature_importance.png
 │   └── feature_importance.csv
@@ -344,132 +320,143 @@ CodeAlpha_Credit_Scoring_Model/
 │   ├── save_model.py
 │   └── predict.py
 │
-├── requirements.txt
-└── README.md
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
-
----
 
 ## 16. Installation
 
-Clone the repository and open the project directory.
+### Prerequisites
 
-Create a virtual environment:
+* Python installed on your system.
+* Visual Studio Code or another Python development environment.
+* Git, if you want to clone or contribute to the repository.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/codebyprudhvi-web/codealpha_tasks.git
+```
+
+Open the downloaded repository in VS Code.
+
+**Note:** This repository may contain multiple internship tasks. Navigate to the Credit Scoring Model project folder before running the commands below.
+
+### Create and Activate a Virtual Environment
+
+On Windows PowerShell:
 
 ```powershell
 python -m venv venv
+.\venv\Scripts\Activate.ps1
 ```
 
-Activate it on Windows:
+### Install Dependencies
 
 ```powershell
-venv\Scripts\activate
+python -m pip install -r requirements.txt
 ```
-
-Install the required packages:
-
-```powershell
-pip install -r requirements.txt
-```
-
----
 
 ## 17. Running the Project
 
-### Inspect the dataset
+Run these commands from the Credit Scoring Model project directory.
+
+### Step 1: Inspect the Dataset
 
 ```powershell
 python src\inspect_data.py
 ```
 
-### Run EDA
+### Step 2: Perform Exploratory Data Analysis
 
 ```powershell
 python src\eda.py
 ```
 
-### Preprocess the data
+### Step 3: Preprocess the Data
 
 ```powershell
 python src\preprocess_data.py
 ```
 
-### Train baseline models
+### Step 4: Train and Compare Baseline Models
 
 ```powershell
 python src\train_baseline_models.py
 ```
 
-### Tune Random Forest
+### Step 5: Tune the Random Forest
 
 ```powershell
 python src\tune_random_forest.py
 ```
 
-### Optimize the decision threshold
+### Step 6: Optimize the Decision Threshold
 
 ```powershell
 python src\optimize_threshold.py
 ```
 
-### Evaluate the final model
+### Step 7: Evaluate the Final Model
 
 ```powershell
 python src\final_evaluation.py
 ```
 
-### Save the final model
-
-```powershell
-python src\save_model.py
-```
-
-### Run the prediction system
+### Step 8: Run the Prediction System
 
 ```powershell
 python src\predict.py
 ```
 
----
+The prediction script asks for the applicant's financial information and displays the estimated risk probability and classification.
+
+### Optional: Save or Retrain the Model
+
+```powershell
+python src\save_model.py
+```
+
+**Warning:** This script retrains and overwrites the existing saved model and decision threshold. Run it only when you intentionally want to regenerate those files.
+
+Run the commands from the project directory so that relative file paths resolve correctly.
 
 ## 18. Limitations
 
-This project is an educational machine learning implementation and should not be treated as a production credit approval system.
+* The dataset has an imbalanced target distribution.
+* The model can produce false-positive and false-negative predictions.
+* The selected threshold may not suit every business objective.
+* Historical data may not represent current financial conditions.
+* Feature importance does not prove causation.
+* The project has not been established as a production-ready or independently validated lending system.
 
-Some limitations include:
-
-* The dataset represents historical credit behavior and may not represent every population.
-* The target classes are highly imbalanced.
-* Model predictions are probabilistic rather than guaranteed outcomes.
-* The selected threshold reflects the evaluation performed in this project and may need to change for different business requirements.
-* Feature importance from Random Forest indicates model influence, not causation.
-* Additional fairness, calibration, validation, security, and regulatory checks would be required for real financial deployment.
-
----
+Real-world use would require further validation, fairness testing, probability calibration, security controls, and compliance review.
 
 ## 19. Future Improvements
 
-Possible future improvements include:
+Possible improvements include:
 
-* Probability calibration
-* More advanced ensemble models
-* Additional feature engineering
-* Cross-validation with more extensive hyperparameter optimization
-* Explainable AI techniques such as SHAP
-* A web-based prediction interface
-* Model monitoring and drift detection
-* Fairness and bias evaluation
-
----
+* Evaluating additional classification algorithms.
+* Testing probability calibration.
+* Conducting fairness and bias analysis.
+* Evaluating performance on newer or independent datasets.
+* Improving the prediction interface.
+* Developing a web interface or API.
+* Monitoring performance after deployment.
 
 ## 20. Conclusion
 
-This project demonstrates a complete machine learning workflow for credit risk prediction, starting from raw financial data and ending with a trained and saved prediction model.
+This project demonstrates an end-to-end machine learning workflow for credit-risk classification.
 
-Random Forest provided the strongest overall baseline performance, and further threshold optimization improved the F1-Score to **43.52%** while maintaining a ROC-AUC of **86.55%**.
+It includes data inspection, exploratory data analysis, preprocessing, baseline model comparison, Random Forest tuning, threshold optimization, model evaluation, feature-importance analysis, and a reusable prediction program.
 
-The final system can accept applicant financial information and generate a probability-based credit risk prediction.
+The final tuned Random Forest achieved a test ROC-AUC of 86.55%. At the selected threshold of 0.75, the model achieved an F1-score of 43.52%.
 
-**Developed as part of the CodeAlpha Machine Learning Internship.**
-#   c o d e a l p h a _ t a s k s  
- 
+These results demonstrate the potential of machine learning for credit-risk analysis while also highlighting the importance of evaluating class imbalance, prediction errors, and threshold selection.
+
+---
+
+**Project:** CodeAlpha Credit Scoring Model
+**Internship:** CodeAlpha Machine Learning Internship
+**Language:** Python
